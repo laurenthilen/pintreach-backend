@@ -11,7 +11,6 @@ import java.sql.SQLException;
 @Configuration
 public class H2ServerConfiguration
 {
-
     /**
      * TCP port for remote connections, default 9092.
      */
