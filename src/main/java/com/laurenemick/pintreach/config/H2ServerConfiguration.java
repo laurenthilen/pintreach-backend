@@ -33,7 +33,7 @@ public class H2ServerConfiguration
      */
     @Bean
     @ConditionalOnExpression("${h2.tcp.enabled:true}")
-    public Serve h2TcpServer() throws
+    public Server h2TcpServer() throws
                                 SQLException
     {
         return Server.createTcpServer("-tcp",
