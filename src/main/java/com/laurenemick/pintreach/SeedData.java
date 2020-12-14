@@ -20,7 +20,6 @@ public class SeedData implements CommandLineRunner
     @Autowired
     UserService userService;
 
-
     @Override
     public void run(String[] args) throws Exception
     {
@@ -46,7 +45,7 @@ public class SeedData implements CommandLineRunner
         userService.save(u1);
 
         // data, user
-        User u2 = new User("Lauren Emick",
+        User u2 = new User("laurenemick",
             "password",
             "lauren@emick.com",
             "http");

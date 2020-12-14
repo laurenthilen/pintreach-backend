@@ -71,7 +71,7 @@ public class UserControllerTest
             .add(new UserRoles(u1, r3));
 
         // data, user
-        User u2 = new User("Lauren Emick",
+        User u2 = new User("laurenemick",
             "password",
             "lauren@emick.com",
             "http");

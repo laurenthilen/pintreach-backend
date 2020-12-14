@@ -14,29 +14,20 @@ public class Article extends Auditable
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long articleid;
 
-    @Column(nullable = false)
     private String url;
 
-    @Column(nullable = false, unique =  true)
     private String title;
 
-    @Column(nullable = false,
-        unique = true)
     private String author;
 
-    @Column(nullable = false)
     private String source;
 
-    @Column(nullable = false)
     private String publishedAt;
 
-    @Column(nullable = false)
     private String urlToImage;
 
-    @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
     private String description;
 
     @OneToMany(mappedBy = "article",

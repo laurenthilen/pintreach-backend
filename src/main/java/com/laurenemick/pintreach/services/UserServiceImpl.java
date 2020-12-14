@@ -16,26 +16,26 @@ import java.util.List;
 public class UserServiceImpl implements UserService
 {
     @Autowired
-    UserRepository userRepository;
+    UserRepository userrepos;
 
     @Autowired
-    RoleService roleService;
+    RoleService roleservice;
 
     @Override
     public List<User> listAll() {
         List<User> myList= new ArrayList<>();
-        userRepository.findAll().iterator().forEachRemaining(myList::add);
+        userrepos.findAll().iterator().forEachRemaining(myList::add);
         return myList;
     }
 
     @Override
     public User findByUsername(String name) {
-        return userRepository.findByUsername(name);
+        return userrepos.findByUsername(name);
     }
 
     @Override
     public User findById(long id) {
-        return userRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("User " + id + " not found"));
+        return userrepos.findById(id).orElseThrow(()->new ResourceNotFoundException("User " + id + " not found"));
     }
 
     @Transactional
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService
 
         if (user.getUserid() != 0)
         {
-            userRepository.findById(user.getUserid())
+            userrepos.findById(user.getUserid())
                 .orElseThrow(() -> new ResourceNotFoundException("User id " + user.getUserid() + " not found!"));
             newUser.setUserid(user.getUserid());
         }
@@ -62,41 +62,44 @@ public class UserServiceImpl implements UserService
             .clear();
         for (UserRoles ur : user.getRoles())
         {
-            Role addRole = roleService.findByName("USER");
+            Role addRole = roleservice.findByName("USER");
             newUser.getRoles()
                 .add(new UserRoles(newUser, addRole));
         }
 
-        return userRepository.save(newUser);
+        return userrepos.save(newUser);
     }
 
-    @Transactional
+    @org.springframework.transaction.annotation.Transactional
     @Override
-    public User update(User user, long id) {
-        User updateUser = userRepository.findById(id)
-            .orElseThrow(()->new ResourceNotFoundException("User " + id + " not found"));
+    public User update(
+        User user,
+        long id)
+    {
+        User updateUser = findById(id);
 
-        if(user.getPassword() != null && user.getPassword() != "")
+        if (user.getPassword() != null && user.getPassword() != "")
         {
             updateUser.setPassword(user.getPassword());
         }
-        if(user.getPrimaryemail() != null )
+
+        if (user.getPrimaryemail() != null)
         {
-            updateUser.setPrimaryemail(user.getPrimaryemail());
+            updateUser.setPrimaryemail(user.getPrimaryemail()
+                .toLowerCase());
         }
 
-        if(user.getImageurl() != null)
+        if (user.getImageurl() != null)
         {
             updateUser.setImageurl(user.getImageurl());
         }
 
-        return userRepository.save(updateUser);
-
+        return userrepos.save(updateUser);
     }
 
     @Transactional
     @Override
     public void delete(long id) {
-        userRepository.deleteById(id);
+        userrepos.deleteById(id);
     }
 }
