@@ -105,14 +105,18 @@ public class User extends Auditable
         this.imageurl = imageurl;
     }
 
-    public String getPassword()
-    {
+    public String getPassword() {
         return password;
+    }
+
+    public void setPasswordNoEncrypt(String password) {
+        this.password = password;
     }
 
     public void setPassword(String password)
     {
-        this.password = password;
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.password = passwordEncoder.encode(password);
     }
 
     public Set<UserRoles> getRoles()
