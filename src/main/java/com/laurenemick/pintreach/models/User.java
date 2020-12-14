@@ -1,5 +1,6 @@
 package com.laurenemick.pintreach.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -139,6 +140,7 @@ public class User extends Auditable
         this.boards = boards;
     }
 
+    @JsonIgnore
     public List<SimpleGrantedAuthority> getAuthority()
     {
         List<SimpleGrantedAuthority> rtnList = new ArrayList<>();

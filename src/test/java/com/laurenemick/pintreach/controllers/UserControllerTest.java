@@ -106,7 +106,7 @@ public class UserControllerTest
     }
 
     @Test
-    public void listAllUsers()
+    public void listAllUsers() throws Exception
     {
         String apiUrl = "/users/users";
 

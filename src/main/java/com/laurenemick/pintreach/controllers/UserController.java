@@ -19,7 +19,7 @@ public class UserController
     @Autowired
     UserService userServices;
 
-    @GetMapping(value = "/users")
+    @GetMapping(value = "/users", produces = {"application/json"})
     public ResponseEntity<?> listAllUsers()
     {
         List<User> myList = userServices.listAll();
@@ -28,7 +28,7 @@ public class UserController
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(value = "/myinfo")
-    public ResponseEntity<?> getUserInfo( Authentication authentication)
+    public ResponseEntity<?> getUserInfo(Authentication authentication)
     {
         User u = userServices.findByUsername(authentication.getName());
         return new ResponseEntity<>(u, HttpStatus.OK);
