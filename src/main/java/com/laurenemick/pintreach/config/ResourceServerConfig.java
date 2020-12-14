@@ -49,7 +49,7 @@ public class ResourceServerConfig
                 "/createnewuser")
             .permitAll()
             .antMatchers("/users/**",
-                "/plants/**",
+                "/boards/**",
                 "/oauth/revoke-token",
                 "/logout")
             .authenticated()
