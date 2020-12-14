@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "userroles")
@@ -62,15 +63,19 @@ public class UserRoles extends Auditable implements Serializable
         {
             return false;
         }
-        UserRoles that = (UserRoles) o;
-        return ((user == null) ? 0 : user.getUserid()) == ((that.user == null) ? 0 : that.user.getUserid()) &&
-            ((role == null) ? 0 : role.getRoleid()) == ((that.role == null) ? 0 : that.role.getRoleid());
+        UserRoles userRoles = (UserRoles) o;
+        return getUser().equals(userRoles.getUser()) && getRole().equals(userRoles.getRole());
     }
 
     @Override
     public int hashCode()
     {
-        // return Objects.hash(user.getUserid(), role.getRoleid());
-        return 38;
+        return Objects.hash(getUser(), getRole());
+    }
+
+    @Override
+    public String toString()
+    {
+        return "UserRoles{" + "user=" + user.getUserid() + ", role=" + role.getRoleid() + '}';
     }
 }

@@ -65,7 +65,7 @@ public class RoleServiceImpl implements RoleService
     @Override
     public Role save(Role role)
     {
-        if (role.getUsers()
+        if (role.getUserroles()
             .size() > 0)
         {
             throw new ResourceFoundException("User Roles are not updated through Role.");
