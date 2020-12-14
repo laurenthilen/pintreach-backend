@@ -1,5 +1,8 @@
 package com.laurenemick.pintreach.repositories;
 
-public class RoleRepository
+import com.laurenemick.pintreach.models.Role;
+import org.springframework.data.repository.CrudRepository;
+
+public interface RoleRepository extends CrudRepository<Role, Long>
 {
 }
