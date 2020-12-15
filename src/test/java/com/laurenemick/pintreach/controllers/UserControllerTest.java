@@ -24,11 +24,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // bc of security
@@ -132,17 +140,66 @@ public class UserControllerTest
     }
 
     @Test
-    public void getUserInfo()
+    public void getUserInfo() throws Exception
     {
+        String apiUrl = "/users/myinfo";
+
+        Mockito
+            .when(userService.findByUsername(anyString()))
+            .thenReturn(userList.get(0));
+
+        RequestBuilder rb = MockMvcRequestBuilders
+            .get(apiUrl)
+            .accept(MediaType.APPLICATION_JSON);
+        MvcResult r = mockMvc.perform(rb).andReturn(); // this could throw an exception
+        String tr = r.getResponse().getContentAsString();
+
+        ObjectMapper mapper = new ObjectMapper();
+        String er = mapper.writeValueAsString(userList.get(0));
+
+        System.out.println("Expect: " + er);
+        System.out.println("Actual: " + tr);
+
+        assertEquals("Rest API Returns List", er, tr);
     }
 
     @Test
-    public void updateUser()
+    public void updateUser() throws Exception
     {
+        String apiUrl = "/users/user/{userid}";
+
+        // build a user
+        User u1 = new User();
+        u1.setUserid(18);
+        u1.setUsername("laurenemick");
+        u1.setPassword("password");
+        u1.setPrimaryemail("test@test.com");
+
+        Mockito.when(userService.update(u1, 18)).thenReturn(userList.get(0));
+
+        ObjectMapper mapper = new ObjectMapper();
+        String userString = mapper.writeValueAsString(u1);
+
+        RequestBuilder rb = MockMvcRequestBuilders.put(apiUrl, 7)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .content(userString);
+
+        mockMvc.perform(rb)
+            .andExpect(status().is2xxSuccessful())
+            .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
-    public void deleteUser()
+    public void deleteUser() throws Exception
     {
+        String apiUrl = "/users/user/{userid}";
+
+        RequestBuilder rb = MockMvcRequestBuilders.delete(apiUrl, "1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON);
+        mockMvc.perform(rb)
+            .andExpect(status().is2xxSuccessful())
+            .andDo(MockMvcResultHandlers.print());
     }
 }
