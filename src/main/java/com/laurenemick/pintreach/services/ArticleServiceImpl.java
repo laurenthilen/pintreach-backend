@@ -58,6 +58,7 @@ public class ArticleServiceImpl
         boardrepos.removeBoardWithNoArticles();
     }
 
+    // title, author, content, description, publishedAt, source, url, urlToImage
     @Transactional
     @Override
     public Article save(Article article)
@@ -68,75 +69,85 @@ public class ArticleServiceImpl
             throw new ResourceNotFoundException("Boards are not updated through Articles");
         };
 
+        Article newArticle = new Article();
+        newArticle.setTitle(article.getTitle());
+        newArticle.setAuthor(article.getAuthor());
+        newArticle.setContent(article.getContent());
+        newArticle.setDescription(article.getDescription());
+        newArticle.setPublishedAt(article.getPublishedAt());
+        newArticle.setSource(article.getSource());
+        newArticle.setUrl(article.getUrl());
+        newArticle.setUrlToImage(article.getUrlToImage());
+
         return articlerepos.save(article);
     }
 
-    // title, author, content, description, publishedAt, source, url, urlToImage
-    @Transactional
-    @Override
-    public Article update(long id,
-                          Article article)
-    {
-        if (article.getBoardarticles()
-            .size() > 0)
-        {
-            throw new ResourceNotFoundException("Articles cannot be updated through this process");
-        }
-
-        Article currentArticle = articlerepos.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Article id " + id + " not found!"));
-
-        if (article.getTitle() != null)
-        {
-            currentArticle.setTitle(article.getTitle());
-        }
-
-        if (article.getAuthor() != null)
-        {
-            currentArticle.setAuthor(article.getAuthor());
-        }
-
-        if (article.getContent() != null)
-        {
-            currentArticle.setContent(article.getContent());
-        }
-
-        if (article.getDescription() != null)
-        {
-            currentArticle.setDescription(article.getDescription());
-        }
-
-        if (article.getPublishedAt() != null)
-        {
-            currentArticle.setPublishedAt(article.getPublishedAt());
-        }
-
-        if (article.getSource() != null)
-        {
-            currentArticle.setSource(article.getSource());
-        }
-
-        if (article.getUrl() != null)
-        {
-            currentArticle.setUrl(article.getUrl());
-        }
-
-        if (article.getUrlToImage() != null)
-        {
-            currentArticle.setUrlToImage(article.getUrlToImage());
-        }
-
-        articlerepos.updateArticleInformation(userAuditing.getCurrentAuditor()
-                .get(),
-            id,
-            currentArticle.getTitle(),
-            currentArticle.getAuthor(),
-            currentArticle.getContent(),
-            currentArticle.getDescription(),
-            currentArticle.getPublishedAt(),
-            currentArticle.getSource(),
-            currentArticle.getUrl(),
-            currentArticle.getUrlToImage());
-        return findArticleById(id);
-    }
+//    // title, author, content, description, publishedAt, source, url, urlToImage
+//    @Transactional
+//    @Override
+//    public Article update(long id,
+//                          Article article)
+//    {
+//        if (article.getBoardarticles()
+//            .size() > 0)
+//        {
+//            throw new ResourceNotFoundException("Articles cannot be updated through this process");
+//        }
+//
+//        Article currentArticle = articlerepos.findById(id)
+//            .orElseThrow(() -> new ResourceNotFoundException("Article id " + id + " not found!"));
+//
+//        if (article.getTitle() != null)
+//        {
+//            currentArticle.setTitle(article.getTitle());
+//        }
+//
+//        if (article.getAuthor() != null)
+//        {
+//            currentArticle.setAuthor(article.getAuthor());
+//        }
+//
+//        if (article.getContent() != null)
+//        {
+//            currentArticle.setContent(article.getContent());
+//        }
+//
+//        if (article.getDescription() != null)
+//        {
+//            currentArticle.setDescription(article.getDescription());
+//        }
+//
+//        if (article.getPublishedAt() != null)
+//        {
+//            currentArticle.setPublishedAt(article.getPublishedAt());
+//        }
+//
+//        if (article.getSource() != null)
+//        {
+//            currentArticle.setSource(article.getSource());
+//        }
+//
+//        if (article.getUrl() != null)
+//        {
+//            currentArticle.setUrl(article.getUrl());
+//        }
+//
+//        if (article.getUrlToImage() != null)
+//        {
+//            currentArticle.setUrlToImage(article.getUrlToImage());
+//        }
+//
+//        articlerepos.updateArticleInformation(userAuditing.getCurrentAuditor()
+//                .get(),
+//            id,
+//            currentArticle.getTitle(),
+//            currentArticle.getAuthor(),
+//            currentArticle.getContent(),
+//            currentArticle.getDescription(),
+//            currentArticle.getPublishedAt(),
+//            currentArticle.getSource(),
+//            currentArticle.getUrl(),
+//            currentArticle.getUrlToImage());
+//        return findArticleById(id);
+//    }
 }

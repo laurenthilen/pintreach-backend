@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface BoardService
 {
-    List<Board> findAllByUserId(Long userid);
+    List<Board> findAllByUserId(long userid);
 
     Board findBoardById(long id);
 

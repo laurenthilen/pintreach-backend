@@ -2,6 +2,7 @@ package com.laurenemick.pintreach;
 
 import com.laurenemick.pintreach.models.*;
 import com.laurenemick.pintreach.services.ArticleService;
+import com.laurenemick.pintreach.services.BoardService;
 import com.laurenemick.pintreach.services.RoleService;
 import com.laurenemick.pintreach.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class SeedData implements CommandLineRunner
 
     @Autowired
     ArticleService articleService;
+
+    @Autowired
+    BoardService boardService;
 
     @Override
     public void run(String[] args) throws Exception
@@ -53,13 +57,12 @@ public class SeedData implements CommandLineRunner
         u1.getRoles()
             .add(new UserRoles(u1, r3));
 
-        u1.getBoards()
-            .add(new Board("Nuclear Energy", "all things nuclear", "http", u1));
-
         Board b1 = new Board("Nuclear Energy", "all things nuclear", "http", u1);
         b1.getArticles().add(new BoardArticles(b1, a2));
 
         userService.save(u1);
+        boardService.save(b1, a2);
+        boardService.save(u1, a2);
 
         // data, user
         User u2 = new User("laurenemick",
@@ -73,11 +76,15 @@ public class SeedData implements CommandLineRunner
             .add(new UserRoles(u2, r3));
 
         Board b2 = new Board("News", "News articles in year 2020", "http", u2);
-        b1.getArticles().add(new BoardArticles(b2, a2));
+        b2.getArticles().add(new BoardArticles(b2, a2));
 
         Board b3 = new Board("WWII Research", "Freshman - HIST 101", "http", u2);
-        b1.getArticles().add(new BoardArticles(b3, a1));
+        b3.getArticles().add(new BoardArticles(b3, a1));
 
         userService.save(u2);
+        boardService.save(b2, a2);
+        boardService.save(u2, a2);
+        boardService.save(b3, a1);
+        boardService.save(u2, a1);
     }
 }

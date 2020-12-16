@@ -32,7 +32,7 @@ public class BoardServiceImpl
     private UserAuditing userAuditing;
 
     @Override
-    public List<Board> findAllByUserId(Long userid)
+    public List<Board> findAllByUserId(long userid)
     {
         return boardrepos.findAllByUser_Userid(userid);
     }
