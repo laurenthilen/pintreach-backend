@@ -20,18 +20,6 @@ public class BoardServiceImpl
     private BoardRepository boardrepos;
 
     @Autowired
-    private UserRepository userrepos;
-
-    @Autowired
-    private ArticleRepository articlerepos;
-
-    @Autowired
-    private UserAuditing userAuditing;
-
-    @Autowired
-    private ArticleService articleService;
-
-    @Autowired
     private HelperFunctions helperFunctions;
 
     @Override

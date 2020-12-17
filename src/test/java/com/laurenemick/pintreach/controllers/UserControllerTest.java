@@ -1,9 +1,8 @@
 package com.laurenemick.pintreach.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.laurenemick.pintreach.models.Role;
-import com.laurenemick.pintreach.models.User;
-import com.laurenemick.pintreach.models.UserRoles;
+import com.laurenemick.pintreach.models.*;
+import com.laurenemick.pintreach.services.BoardService;
 import com.laurenemick.pintreach.services.UserService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.After;
@@ -29,14 +28,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // bc of security
@@ -53,17 +49,22 @@ public class UserControllerTest
     @MockBean // don't want to call the service bc it wouldn't be a unit test - it would be implementation
     private UserService userService;
 
-    private List<User> userList;
+    @MockBean
+    private BoardService boardService;
+
+    List<User> userList = new ArrayList<>();
+
+    List<Board> boardList = new ArrayList<>();
 
     @Before
     public void setUp() throws Exception
     {
-        // build DB (list)
-        userList = new ArrayList<>();
-
         Role r1 = new Role("admin");
         Role r2 = new Role("user");
         Role r3 = new Role("data");
+
+        Article a1 = new Article("http", "World War II", "History.com editors", "History", "12/16/20", "", "https://www.history.com/topics/world-war-ii/world-war-ii-history", "");
+        Article a2 = new Article("http", "Nuclear", "", "Institute for Energy Research", "12/01/17", "", "https://www.instituteforenergyresearch.org/?encyclopedia=nuclear&gclid=CjwKCAiA_eb-BRB2EiwAGBnXXjJk4Y278Ze_GNN6994HVRPaY7JyazyscknMw_V1Qzdmf8bkVYYMPRoC7l8QAvD_BwE", "Nuclear power comes from the process of nuclear fission, or the splitting of atoms. The resulting controlled nuclear chain reaction creates heat, which is used to boil water, produce steam, and drive turbines that generate electricity.");
 
         // admin, data, user
         User u1 = new User("admin",
@@ -71,6 +72,7 @@ public class UserControllerTest
             "admin@admin.com",
             "http");
         u1.setUserid(17);
+
         u1.getRoles()
             .add(new UserRoles(u1, r1));
         u1.getRoles()
@@ -78,27 +80,36 @@ public class UserControllerTest
         u1.getRoles()
             .add(new UserRoles(u1, r3));
 
+        Board b1 = new Board("Nuclear Energy", "all things nuclear", "http", u1);
+        b1.getArticles().add(new BoardArticles(b1, a2));
+        b1.setBoardid(100);
+
         // data, user
         User u2 = new User("laurenemick",
             "password",
             "lauren@emick.com",
             "http");
         u2.setUserid(18);
+
         u2.getRoles()
             .add(new UserRoles(u2, r2));
         u2.getRoles()
             .add(new UserRoles(u2, r3));
 
+        Board b2 = new Board("News", "News articles in year 2020", "http", u2);
+        b2.getArticles().add(new BoardArticles(b2, a2));
+        b2.setBoardid(101);
+
+        Board b3 = new Board("WWII Research", "Freshman - HIST 101", "http", u2);
+        b3.getArticles().add(new BoardArticles(b3, a1));
+        b3.setBoardid(102);
+
         // add to list
         userList.add(u1);
         userList.add(u2);
-
-        System.out.println("\n*** Seed Data ***");
-        for (User u : userList)
-        {
-            System.out.println(u);
-        }
-        System.out.println("*** Seed Data ***\n");
+        boardList.add(b1);
+        boardList.add(b2);
+        boardList.add(b3);
 
         // add the below to do security testing:
         RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
