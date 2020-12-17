@@ -1,8 +1,6 @@
 package com.laurenemick.pintreach.services;
 
-import com.laurenemick.pintreach.models.Article;
 import com.laurenemick.pintreach.models.Board;
-import com.laurenemick.pintreach.models.User;
 
 import java.util.List;
 
@@ -12,14 +10,11 @@ public interface BoardService
 
     Board findBoardById(long id);
 
-    Board save(
-        User user,
-        Article article);
+    Board save(Board board);
 
-    Board save(Board board,
-              Article article);
+    Board update(
+        long id,
+        Board Board);
 
-    void delete(
-        Board board,
-        Article article);
+    void delete(long id);
 }

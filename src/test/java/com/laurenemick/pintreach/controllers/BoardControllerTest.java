@@ -7,8 +7,10 @@ import com.laurenemick.pintreach.services.UserService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,18 +24,22 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // bc of security
 @AutoConfigureMockMvc // security
 @WithMockUser(username = "admin", roles = {"ADMIN", "USER", "DATA"})
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BoardControllerTest
 {
     @Autowired
@@ -120,7 +126,7 @@ public class BoardControllerTest
     }
 
     @Test
-    public void listAllBoards() throws Exception
+    public void a_listAllBoards() throws Exception
     {
         String apiURL = "/boards/user/17";
 
@@ -144,7 +150,7 @@ public class BoardControllerTest
     }
 
     @Test
-    public void getBoardById() throws Exception
+    public void b_getBoardById() throws Exception
     {
         String apiURL = "/boards/board/100";
 
@@ -166,17 +172,72 @@ public class BoardControllerTest
     }
 
     @Test
-    public void addNewBoard()
+    public void c_addNewBoard() throws Exception
     {
+        String apiURL = "/boards/board";
+
+        Board newBoard = new Board();
+        newBoard.setBoardid(100);
+        newBoard.setUser(userList.get(0));
+        newBoard.setName("New Board");
+        newBoard.setDescription("New Board description.");
+        newBoard.setThumbnail("http");
+
+        ObjectMapper mapper = new ObjectMapper();
+        String itemString = mapper.writeValueAsString(newBoard);
+
+        Mockito.when(boardService.save(any(Board.class))).thenReturn(newBoard);
+
+        RequestBuilder rb = MockMvcRequestBuilders
+            .post(apiURL)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .content(itemString);
+
+        mockMvc
+            .perform(rb)
+            .andExpect(status().isCreated())
+            .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
-    public void updateBoard()
+    public void d_updateBoard() throws Exception
     {
+        String apiURL = "/boards/board/100";
+
+        Board newBoard = new Board();
+        newBoard.setBoardid(100);
+        newBoard.setUser(userList.get(0));
+        newBoard.setName("Nuclear Energy");
+        newBoard.setDescription("All things nuclear");
+        newBoard.setThumbnail("http");
+
+        Mockito.when(boardService.update(100, newBoard)).thenReturn(boardList.get(0));
+
+        ObjectMapper mapper = new ObjectMapper();
+        String boardString = mapper.writeValueAsString(newBoard);
+
+        RequestBuilder rb = MockMvcRequestBuilders
+            .put(apiURL, 7)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .content(boardString);
+
+        mockMvc.perform(rb)
+            .andExpect(status().is2xxSuccessful())
+            .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
-    public void deleteFromBoard()
+    public void e_deleteFromBoard() throws Exception
     {
+        String apiURL = "/boards/board/100";
+
+        RequestBuilder rb = MockMvcRequestBuilders.delete(apiURL, 100)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON);
+        mockMvc.perform(rb)
+            .andExpect(status().is2xxSuccessful())
+            .andDo(MockMvcResultHandlers.print());
     }
 }

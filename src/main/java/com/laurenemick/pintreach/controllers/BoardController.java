@@ -1,14 +1,17 @@
 package com.laurenemick.pintreach.controllers;
 
-import com.laurenemick.pintreach.models.Article;
 import com.laurenemick.pintreach.models.Board;
-import com.laurenemick.pintreach.models.User;
+import com.laurenemick.pintreach.services.HelperFunctions;
 import com.laurenemick.pintreach.services.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 
@@ -18,6 +21,9 @@ public class BoardController
 {
     @Autowired
     private BoardService boardService;
+
+    @Autowired
+    private HelperFunctions helperFunctions;
 
     @GetMapping(value = "/user/{userId}", produces = {"application/json"})
     public ResponseEntity<?> listAllBoards(@PathVariable Long userId)
@@ -37,45 +43,37 @@ public class BoardController
             HttpStatus.OK);
     }
 
-    @PostMapping(value = "/create/user/{userid}/article/{articleid}")
-    public ResponseEntity<?> addNewBoard(@PathVariable long userid,
-                                        @PathVariable long articleid)
+    @PostMapping(value = "/board")
+    public ResponseEntity<?> addNewBoard(@Valid @RequestBody Board newBoard)
     {
-        User dataUser = new User();
-        dataUser.setUserid(userid);
+        // always post as current user
+        newBoard.setUser(helperFunctions.getCurrentUser());
 
-        Article dataArticle = new Article();
-        dataArticle.setArticleid(articleid);
+        newBoard = boardService.save(newBoard);
 
-        boardService.save(dataUser, dataArticle);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        URI newBoardURI = ServletUriComponentsBuilder
+            .fromCurrentRequest()
+            .path("/{boardId}")
+            .buildAndExpand(newBoard.getBoardid())
+            .toUri();
+        responseHeaders.setLocation(newBoardURI);
+
+        return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/update/board/{boardid}/article/{articleid}")
-    public ResponseEntity<?> updateBoard(@PathVariable long boardid,
-                                        @PathVariable long articleid)
+    @PutMapping(value = "/board/{boardId}")
+    public ResponseEntity<?> updateBoard(@PathVariable long boardId, @RequestBody Board updateBoard)
     {
-        Board dataBoard = new Board();
-        dataBoard.setBoardid(boardid);
+        boardService.update(boardId, updateBoard);
 
-        Article dataArticle = new Article();
-        dataArticle.setArticleid(articleid);
-
-        boardService.save(dataBoard, dataArticle);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/delete/board/{boardid}/article/{articleid}")
-    public ResponseEntity<?> deleteFromBoard(@PathVariable long boardid,
-                                            @PathVariable long articleid)
+    @DeleteMapping(value = "/board/{id}")
+    public ResponseEntity<?> deleteBoard(@PathVariable long id)
     {
-        Board dataBoard = new Board();
-        dataBoard.setBoardid(boardid);
-
-        Article dataArticle = new Article();
-        dataArticle.setArticleid(articleid);
-
-        boardService.delete(dataBoard, dataArticle);
+        boardService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
