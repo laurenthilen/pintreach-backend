@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@JsonIgnoreProperties(value = {"boards"})
 @Table(name = "articles")
 public class Article extends Auditable
 {

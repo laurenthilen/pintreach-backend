@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@JsonIgnoreProperties(value = {"user"})
 @Table(name = "boards")
 public class Board extends Auditable
 {
