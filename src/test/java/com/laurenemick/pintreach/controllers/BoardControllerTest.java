@@ -3,7 +3,6 @@ package com.laurenemick.pintreach.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.laurenemick.pintreach.models.*;
 import com.laurenemick.pintreach.services.BoardService;
-import com.laurenemick.pintreach.services.UserService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.After;
 import org.junit.Before;
@@ -49,9 +48,6 @@ public class BoardControllerTest
 
     @MockBean
     private BoardService boardService;
-
-    @MockBean
-    private UserService userService;
 
     List<Board> boardList = new ArrayList<>();
 

@@ -57,6 +57,10 @@ public class SeedData implements CommandLineRunner
         u1.getRoles()
             .add(new UserRoles(u1, r3));
 
+//        // later addition - user can add articles
+//        u1.getArticles()
+//            .add(new Article("http", "My Article", "Me", "", "12/06/20", "", "This is the content to my article", "", u1));
+
         Board b1 = new Board("Nuclear Energy", "all things nuclear", "http", u1);
         b1.getArticles().add(new BoardArticles(b1, a2));
 

@@ -33,7 +33,14 @@ public class Article extends Auditable
     @OneToMany(mappedBy = "article",
         cascade = CascadeType.ALL)
     @JsonIgnoreProperties("article")
-    private List<BoardArticles> boardarticles = new ArrayList<>();
+    private List<BoardArticles> boards = new ArrayList<>();
+
+//    // later addition - user can add articles
+//    @ManyToOne
+//    @JoinColumn(name = "userid",
+//        nullable = false)
+//    @JsonIgnoreProperties(value = {"articles", "user", "roles"}, allowSetters = true)
+//    private User user;
 
     public Article()
     {
@@ -149,13 +156,23 @@ public class Article extends Auditable
         this.description = description;
     }
 
-    public List<BoardArticles> getBoardarticles()
+    public List<BoardArticles> getBoards()
     {
-        return boardarticles;
+        return boards;
     }
 
-    public void setBoardarticles(List<BoardArticles> boardarticles)
+    public void setBoards(List<BoardArticles> boards)
     {
-        this.boardarticles = boardarticles;
+        this.boards = boards;
     }
+
+//    public User getUser()
+//    {
+//        return user;
+//    }
+//
+//    public void setUser(User user)
+//    {
+//        this.user = user;
+//    }
 }

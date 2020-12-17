@@ -22,9 +22,6 @@ public class ArticleServiceImpl
     private BoardRepository boardrepos;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private UserAuditing userAuditing;
 
     @Override
@@ -63,7 +60,7 @@ public class ArticleServiceImpl
     @Override
     public Article save(Article article)
     {
-        if (article.getBoardarticles()
+        if (article.getBoards()
             .size() > 0)
         {
             throw new ResourceNotFoundException("Boards are not updated through Articles");
@@ -82,13 +79,14 @@ public class ArticleServiceImpl
         return articlerepos.save(article);
     }
 
+//    // later addition - user can add articles
 //    // title, author, content, description, publishedAt, source, url, urlToImage
 //    @Transactional
 //    @Override
 //    public Article update(long id,
 //                          Article article)
 //    {
-//        if (article.getBoardarticles()
+//        if (article.getBoards()
 //            .size() > 0)
 //        {
 //            throw new ResourceNotFoundException("Articles cannot be updated through this process");

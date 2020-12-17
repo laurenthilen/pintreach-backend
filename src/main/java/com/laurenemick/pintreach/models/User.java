@@ -49,6 +49,13 @@ public class User extends Auditable
     @JsonIgnoreProperties(value = "user", allowSetters = true)
     private List<Board> boards = new ArrayList<>();
 
+//    // later addition - user can add articles
+//    @OneToMany(mappedBy = "user",
+//        cascade = CascadeType.ALL,
+//        orphanRemoval = true)
+//    @JsonIgnoreProperties(value = "user", allowSetters = true)
+//    private List<Article> articles = new ArrayList<>();
+
     public User()
     {
     }
@@ -139,6 +146,16 @@ public class User extends Auditable
     {
         this.boards = boards;
     }
+
+//    public List<Article> getArticles()
+//    {
+//        return articles;
+//    }
+//
+//    public void setArticles(List<Article> articles)
+//    {
+//        this.articles = articles;
+//    }
 
     @JsonIgnore
     public List<SimpleGrantedAuthority> getAuthority()
