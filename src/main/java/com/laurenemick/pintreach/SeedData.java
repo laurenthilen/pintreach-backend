@@ -57,15 +57,11 @@ public class SeedData implements CommandLineRunner
         u1.getRoles()
             .add(new UserRoles(u1, r3));
 
-//        // later addition - user can add articles
-//        u1.getArticles()
-//            .add(new Article("http", "My Article", "Me", "", "12/06/20", "", "This is the content to my article", "", u1));
-
         Board b1 = new Board("Nuclear Energy", "all things nuclear", "http", u1);
         b1.getArticles().add(new BoardArticles(b1, a2));
 
         userService.save(u1);
-        boardService.save(b1);
+//        boardService.save(b1);
 
         // data, user
         User u2 = new User("laurenemick",
@@ -85,7 +81,7 @@ public class SeedData implements CommandLineRunner
         b3.getArticles().add(new BoardArticles(b3, a1));
 
         userService.save(u2);
-        boardService.save(b2);
-        boardService.save(b3);
+//        boardService.save(b2);
+//        boardService.save(b3);
     }
 }

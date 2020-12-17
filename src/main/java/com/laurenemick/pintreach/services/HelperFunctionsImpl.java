@@ -81,8 +81,8 @@ public class HelperFunctionsImpl implements HelperFunctions {
                 .getContext()
                 .getAuthentication();
 
-            String name = authentication.getName();
-            return userRepository.findByUsername(name);
+            String primaryEmail = authentication.getName();
+            return userRepository.findByUsername(primaryEmail);
         }
     }
 }

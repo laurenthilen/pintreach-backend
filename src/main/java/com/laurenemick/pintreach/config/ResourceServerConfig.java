@@ -1,6 +1,7 @@
 package com.laurenemick.pintreach.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
@@ -46,12 +47,21 @@ public class ResourceServerConfig
                 "/swagger-ui.html",
                 "/v2/api-docs",
                 "/webjars/**",
-                "/createnewuser")
+                "/createnewuser",
+                "/boards")
             .permitAll()
-            .antMatchers("/users/**",
+            .antMatchers(HttpMethod.DELETE, "/users/**")
+            .hasAnyRole("ADMIN")
+            .antMatchers(HttpMethod.PUT, "/users/**")
+            .hasAnyRole("ADMIN")
+            .antMatchers(
+                "/users/**",
+                "/user_emails/**",
                 "/boards/**",
+                "/articles/**",
                 "/oauth/revoke-token",
-                "/logout")
+                "/logout"
+            )
             .authenticated()
             .antMatchers("/roles/**")
             .hasAnyRole("ADMIN")

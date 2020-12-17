@@ -173,11 +173,13 @@ public class BoardControllerTest
         String apiURL = "/boards/board";
 
         Board newBoard = new Board();
+
         newBoard.setBoardid(100);
         newBoard.setUser(userList.get(0));
         newBoard.setName("New Board");
         newBoard.setDescription("New Board description.");
         newBoard.setThumbnail("http");
+        newBoard.setBoardid(0);
 
         ObjectMapper mapper = new ObjectMapper();
         String itemString = mapper.writeValueAsString(newBoard);

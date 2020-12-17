@@ -17,6 +17,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties(value = {"roles"})
 public class User extends Auditable
 {
     @Id
@@ -29,6 +30,7 @@ public class User extends Auditable
 
     @Column(nullable = false, unique = true)
     @Email
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String primaryemail;
 
     private String imageurl;

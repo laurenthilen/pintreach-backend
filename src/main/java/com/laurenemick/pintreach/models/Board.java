@@ -31,7 +31,7 @@ public class Board extends Auditable
     @ManyToOne
     @JoinColumn(name = "userid",
         nullable = false)
-    @JsonIgnoreProperties(value = {"boards", "user", "roles"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"boards"}, allowSetters = true)
     private User user;
 
     public Board()

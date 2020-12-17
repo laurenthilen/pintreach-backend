@@ -45,26 +45,26 @@ public class ArticleController
             HttpStatus.OK);
     }
 
-    @PostMapping(value = "/article")
-    public ResponseEntity<?> addArticle(@Valid @RequestBody Article newarticle)
-    {
-        newarticle.setArticleid(0);
-        newarticle = articleService.save(newarticle);
+    //    // later addition - user can update articles
+//    @PostMapping(value = "/article")
+//    public ResponseEntity<?> addArticle(@Valid @RequestBody Article newarticle)
+//    {
+//        newarticle.setArticleid(0);
+//        newarticle = articleService.save(newarticle);
+//
+//        // set the location header for the newly created resource
+//        HttpHeaders responseHeaders = new HttpHeaders();
+//        URI newArticleURI = ServletUriComponentsBuilder.fromCurrentRequest()
+//            .path("/{userid}")
+//            .buildAndExpand(newarticle.getArticleid())
+//            .toUri();
+//        responseHeaders.setLocation(newArticleURI);
+//
+//        return new ResponseEntity<>(null,
+//            responseHeaders,
+//            HttpStatus.CREATED);
+//    }
 
-        // set the location header for the newly created resource
-        HttpHeaders responseHeaders = new HttpHeaders();
-        URI newArticleURI = ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{userid}")
-            .buildAndExpand(newarticle.getArticleid())
-            .toUri();
-        responseHeaders.setLocation(newArticleURI);
-
-        return new ResponseEntity<>(null,
-            responseHeaders,
-            HttpStatus.CREATED);
-    }
-
-//    // later addition - user can update articles
 //    @PutMapping(value = "/article/{articleid}")
 //    public ResponseEntity<?> updateArticleById(
 //        @RequestBody Article updateArticle,
@@ -74,11 +74,11 @@ public class ArticleController
 //        return new ResponseEntity<>(HttpStatus.OK);
 //    }
 
-    @DeleteMapping(value = "/article/{articleid}")
-    public ResponseEntity<?> getArticleById(
-        @PathVariable long articleid)
-    {
-        articleService.delete(articleid);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @DeleteMapping(value = "/article/{articleid}")
+//    public ResponseEntity<?> getArticleById(
+//        @PathVariable long articleid)
+//    {
+//        articleService.delete(articleid);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 }

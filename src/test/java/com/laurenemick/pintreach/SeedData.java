@@ -61,7 +61,7 @@ public class SeedData implements CommandLineRunner
         b1.getArticles().add(new BoardArticles(b1, a2));
 
         userService.save(u1);
-        boardService.save(b1);
+        //        boardService.save(b1);
 
         // data, user
         User u2 = new User("laurenemick",
@@ -81,8 +81,7 @@ public class SeedData implements CommandLineRunner
         b3.getArticles().add(new BoardArticles(b3, a1));
 
         userService.save(u2);
-        boardService.save(b2);
-        boardService.save(b3);
-
+        //        boardService.save(b2);
+        //        boardService.save(b3);
     }
 }

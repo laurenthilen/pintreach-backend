@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -42,8 +43,9 @@ public class BoardController
             HttpStatus.OK);
     }
 
-    @PostMapping(value = "/board")
-    public ResponseEntity<?> addNewBoard(@Valid @RequestBody Board newBoard)
+    @PostMapping(value = "/board", consumes = {"application/json"})
+    public ResponseEntity<?> addNewBoard(@Valid
+                                         @RequestBody Board newBoard) throws URISyntaxException
     {
         // always post as current user
         newBoard.setUser(helperFunctions.getCurrentUser());

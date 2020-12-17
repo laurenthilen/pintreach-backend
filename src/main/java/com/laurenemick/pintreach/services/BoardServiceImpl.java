@@ -6,6 +6,8 @@ import com.laurenemick.pintreach.repositories.ArticleRepository;
 import com.laurenemick.pintreach.repositories.BoardRepository;
 import com.laurenemick.pintreach.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,9 @@ public class BoardServiceImpl
 {
     @Autowired
     private BoardRepository boardrepos;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private HelperFunctions helperFunctions;
@@ -38,14 +43,14 @@ public class BoardServiceImpl
     @Override
     public Board save(Board board)
     {
-        Board newBoard = new Board();
+//        if (board.getBoardid() != 0)
+//        {
+//            boardrepos.findById(board.getBoardid())
+//                .orElseThrow(() -> new ResourceNotFoundException("Board id " + board.getBoardid() + " not found!"));
+//            newBoard.setBoardid(board.getBoardid());
+//        }
 
-        if (board.getBoardid() != 0)
-        {
-            boardrepos.findById(board.getBoardid())
-                .orElseThrow(() -> new ResourceNotFoundException("Board id " + board.getBoardid() + " not found!"));
-            newBoard.setBoardid(board.getBoardid());
-        }
+        Board newBoard = new Board();
 
         // Set local fields
         newBoard.setName(board.getName());
