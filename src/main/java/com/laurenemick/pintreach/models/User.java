@@ -17,7 +17,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@JsonIgnoreProperties(value = {"roles"})
+//@JsonIgnoreProperties(value = {"roles"})
 public class User extends Auditable
 {
     @Id

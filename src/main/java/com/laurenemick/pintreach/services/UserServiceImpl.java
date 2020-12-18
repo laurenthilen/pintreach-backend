@@ -3,6 +3,7 @@ package com.laurenemick.pintreach.services;
 import com.laurenemick.pintreach.exceptions.ResourceNotFoundException;
 import com.laurenemick.pintreach.models.Role;
 import com.laurenemick.pintreach.models.User;
+import com.laurenemick.pintreach.models.UserMinimum;
 import com.laurenemick.pintreach.models.UserRoles;
 import com.laurenemick.pintreach.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,12 @@ public class UserServiceImpl implements UserService
     @Override
     public User findByUsername(String name) {
         return userrepos.findByUsername(name);
+    }
+
+    public User findUserById(long id) throws ResourceNotFoundException
+    {
+        return userrepos.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("User id " + id + " not found!"));
     }
 
     @Override
@@ -70,10 +77,10 @@ public class UserServiceImpl implements UserService
         return userrepos.save(newUser);
     }
 
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     @Override
     public User update(
-        User user,
+        UserMinimum user,
         long id)
     {
         User updateUser = findById(id);
@@ -101,5 +108,11 @@ public class UserServiceImpl implements UserService
     @Override
     public void delete(long id) {
         userrepos.deleteById(id);
+    }
+
+    @Transactional
+    @Override
+    public void deleteAll() {
+        userrepos.deleteAll();
     }
 }

@@ -26,16 +26,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * The class allows access to endpoints that are open to all users regardless of authentication status.
- * Its most important function is to allow a person to create their own username
- */
 @RestController
 public class OpenController
 {
+    /**
+     * A method in this controller adds a new user to the application so needs access to User Services to do this.
+     */
     @Autowired
     private UserService userService;
 
+    /**
+     * A method in this controller adds a new user to the application with the role User so needs access to Role Services to do this.
+     */
     @Autowired
     private RoleService roleService;
 
@@ -47,7 +49,7 @@ public class OpenController
      * @return The token access and other relevent data to token access. Status of CREATED. The location header to look up the new user.
      * @throws URISyntaxException we create some URIs during this method. If anything goes wrong with that creation, an exception is thrown.
      */
-    @PostMapping(value = "/createnewuser",
+    @PostMapping(value = "/registeruser",
         consumes = {"application/json"},
         produces = {"application/json"})
     public ResponseEntity<?> addSelf(
@@ -63,11 +65,13 @@ public class OpenController
 
         newuser.setUsername(newminuser.getUsername());
         newuser.setPassword(newminuser.getPassword());
+        newuser.setPrimaryemail(newminuser.getPrimaryemail());
+        newuser.setImageurl((newminuser.getImageurl()));
 
         // add the default role of user
         Set<UserRoles> newRoles = new HashSet<>();
         newRoles.add(new UserRoles(newuser,
-            roleService.findByName("USER")));
+            roleService.findByName("user")));
         newuser.setRoles(newRoles);
 
         newuser = userService.save(newuser);
@@ -83,9 +87,7 @@ public class OpenController
         // return the access token
         // To get the access token, surf to the endpoint /login just as if a client had done this.
         RestTemplate restTemplate = new RestTemplate();
-        String requestURI = "http://" + httpServletRequest.getServerName() +
-            (httpServletRequest.getServerName().equalsIgnoreCase("localhost") ? ":" + httpServletRequest.getLocalPort() : "") +
-            "/login";
+        String requestURI = "http://" + httpServletRequest.getServerName() + ":" + httpServletRequest.getLocalPort() + "/login";
 
         List<MediaType> acceptableMediaTypes = new ArrayList<>();
         acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
@@ -93,7 +95,6 @@ public class OpenController
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setAccept(acceptableMediaTypes);
-        //        headers.setBasicAuth("lambda-client", "lambda-secret");
         headers.setBasicAuth(System.getenv("OAUTHCLIENTID"),
             System.getenv("OAUTHCLIENTSECRET"));
 
@@ -114,7 +115,7 @@ public class OpenController
             request,
             String.class);
 
-        return new ResponseEntity<>(null,
+        return new ResponseEntity<>(theToken,
             responseHeaders,
             HttpStatus.CREATED);
     }

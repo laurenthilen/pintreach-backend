@@ -79,6 +79,12 @@ public class ArticleServiceImpl
         return articlerepos.save(article);
     }
 
+    @Transactional
+    @Override
+    public void deleteAll() {
+        articlerepos.deleteAll();
+    }
+
 //    // later addition - user can add articles
 //    // title, author, content, description, publishedAt, source, url, urlToImage
 //    @Transactional

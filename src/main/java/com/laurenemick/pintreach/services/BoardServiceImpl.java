@@ -106,4 +106,10 @@ public class BoardServiceImpl
     public void delete(long id) {
         boardrepos.deleteById(id);
     }
+
+    @Transactional
+    @Override
+    public void deleteAll() {
+        boardrepos.deleteAll();
+    }
 }

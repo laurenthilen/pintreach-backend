@@ -73,4 +73,10 @@ public class RoleServiceImpl implements RoleService
 
         return rolerepos.save(role);
     }
+
+    @Transactional
+    @Override
+    public void deleteAll() {
+        rolerepos.deleteAll();
+    }
 }

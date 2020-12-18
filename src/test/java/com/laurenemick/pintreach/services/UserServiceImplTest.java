@@ -3,6 +3,7 @@ package com.laurenemick.pintreach.services;
 import com.laurenemick.pintreach.PintreachApplication;
 import com.laurenemick.pintreach.models.Role;
 import com.laurenemick.pintreach.models.User;
+import com.laurenemick.pintreach.models.UserMinimum;
 import com.laurenemick.pintreach.models.UserRoles;
 import org.junit.After;
 import org.junit.Before;
@@ -60,62 +61,38 @@ public class UserServiceImplTest
     @Test
     public void c_findById()
     {
-        assertEquals("admin", userService.findById(4)
+        assertEquals("admin", userService.findById(6)
             .getUsername());
     }
 
     @Test
     public void d_save()
     {
-        Role r2 = new Role("user");
-        Role r3 = new Role("data");
-        r2.setRoleid(2);
-        r3.setRoleid(3);
-
-        User u5 = new User("james",
-            "password",
-            "james@james.com",
-            "https");
-        u5.getRoles().add(new UserRoles(u5, r2));
-        u5.getRoles().add(new UserRoles(u5, r3));
-        User saveu5 = userService.save(u5);
-
-        System.out.println("*** DATA ***");
-        System.out.println(saveu5);
-        System.out.println("*** DATA ***");
-
-        assertEquals("james", u5.getUsername());
+        User newUser = new User("test test", "test", "test@email.com", "http");
+        userService.save(newUser);
+        assertEquals(3, userService.listAll().size());
     }
 
     @Test
     public void e_update()
     {
-        Role r2 = new Role("user");
-        Role r3 = new Role("data");
-        r2.setRoleid(2);
-        r3.setRoleid(3);
+        UserMinimum original = new UserMinimum();
 
-        User u5 = new User("james",
-            "password123",
-            "james@james.com",
-            "https");
-        u5.getRoles().add(new UserRoles(u5, r2));
-        u5.getRoles().add(new UserRoles(u5, r3));
-        User saveu5 = userService.save(u5);
+        original.setImageurl("updated http");
+        original.setPassword("");
+        original.setPrimaryemail("updated@updated.com");
+        original.setUsername("");
 
-        User updatedu5 = userService.update(u5, 6);
+        userService.update(original, 7);
 
-        System.out.println("*** DATA ***");
-        System.out.println(updatedu5);
-        System.out.println("*** DATA ***");
-
-        assertEquals("james@james.com", userService.findByUsername("james").getPrimaryemail());
+        assertEquals("updated@updated.com",userService.findById(7).getPrimaryemail());
+        assertEquals("updated http", userService.findById(7).getImageurl());
     }
 
     @Test
     public void f_delete()
     {
-        userService.delete(5);
+        userService.delete(7);
         assertEquals(2, userService.listAll().size());
     }
 }

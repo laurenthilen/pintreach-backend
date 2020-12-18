@@ -49,19 +49,20 @@ public class UserControllerTest
     @MockBean // don't want to call the service bc it wouldn't be a unit test - it would be implementation
     private UserService userService;
 
-    @MockBean
-    private BoardService boardService;
-
-    List<User> userList = new ArrayList<>();
-
-    List<Board> boardList = new ArrayList<>();
+    private List<User> userList;
 
     @Before
     public void setUp() throws Exception
     {
-        Role r1 = new Role("admin");
-        Role r2 = new Role("user");
-        Role r3 = new Role("data");
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+            .apply(SecurityMockMvcConfigurers.springSecurity())
+            .build();
+
+        userList = new ArrayList<>();
+
+        Role r1 = new Role("ADMIN");
+        Role r2 = new Role("USER");
+        Role r3 = new Role("DATA");
 
         Article a1 = new Article("http", "World War II", "History.com editors", "History", "12/16/20", "", "https://www.history.com/topics/world-war-ii/world-war-ii-history", "");
         Article a2 = new Article("http", "Nuclear", "", "Institute for Energy Research", "12/01/17", "", "https://www.instituteforenergyresearch.org/?encyclopedia=nuclear&gclid=CjwKCAiA_eb-BRB2EiwAGBnXXjJk4Y278Ze_GNN6994HVRPaY7JyazyscknMw_V1Qzdmf8bkVYYMPRoC7l8QAvD_BwE", "Nuclear power comes from the process of nuclear fission, or the splitting of atoms. The resulting controlled nuclear chain reaction creates heat, which is used to boil water, produce steam, and drive turbines that generate electricity.");
@@ -107,16 +108,6 @@ public class UserControllerTest
         // add to list
         userList.add(u1);
         userList.add(u2);
-        boardList.add(b1);
-        boardList.add(b2);
-        boardList.add(b3);
-
-        // add the below to do security testing:
-        RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
-
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-            .apply(SecurityMockMvcConfigurers.springSecurity())
-            .build();
     }
 
     @After
@@ -177,28 +168,29 @@ public class UserControllerTest
     @Test
     public void updateUser() throws Exception
     {
-        String apiUrl = "/users/user/{userid}";
+        String apiUrl = "/users/user/18";
 
-        // build a user
-        User u1 = new User();
-        u1.setUserid(18);
-        u1.setUsername("laurenemick");
-        u1.setPassword("password");
-        u1.setPrimaryemail("test@test.com");
+        User updatedUser = userList.get(18);
+        updatedUser.setImageurl("updatedimageurl");
 
-        Mockito.when(userService.update(u1, 18)).thenReturn(userList.get(0));
+        UserMinimum newUser = new UserMinimum();
+
+        newUser.setUsername(updatedUser.getUsername());
+        newUser.setPassword(updatedUser.getPassword());
+        newUser.setPrimaryemail(updatedUser.getPrimaryemail());
+        newUser.setImageurl(updatedUser.getImageurl());
+
+        Mockito.when(userService.update(newUser, 18)).thenReturn(updatedUser);
 
         ObjectMapper mapper = new ObjectMapper();
-        String userString = mapper.writeValueAsString(u1);
+        String userString = mapper.writeValueAsString(newUser);
 
-        RequestBuilder rb = MockMvcRequestBuilders.put(apiUrl, 7)
+        RequestBuilder rb = MockMvcRequestBuilders.put(apiUrl)
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .content(userString);
 
-        mockMvc.perform(rb)
-            .andExpect(status().is2xxSuccessful())
-            .andDo(MockMvcResultHandlers.print());
+        mockMvc.perform(rb).andExpect(status().isForbidden()).andDo(MockMvcResultHandlers.print());
     }
 
     @Test

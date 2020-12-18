@@ -17,4 +17,6 @@ public interface BoardService
         Board Board);
 
     void delete(long id);
+
+    void deleteAll();
 }

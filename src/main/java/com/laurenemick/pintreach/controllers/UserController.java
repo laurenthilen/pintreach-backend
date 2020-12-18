@@ -1,6 +1,7 @@
 package com.laurenemick.pintreach.controllers;
 
 import com.laurenemick.pintreach.models.User;
+import com.laurenemick.pintreach.models.UserMinimum;
 import com.laurenemick.pintreach.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +30,17 @@ public class UserController
         return new ResponseEntity<>(myList, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/user/{userId}",
+        produces = {"application/json"})
+    public ResponseEntity<?> getUserById(
+        @PathVariable
+            Long userId)
+    {
+        User u = userService.findUserById(userId);
+        return new ResponseEntity<>(u,
+            HttpStatus.OK);
+    }
+
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(value = "/myinfo")
     public ResponseEntity<?> getUserInfo(Authentication authentication)
@@ -37,25 +49,26 @@ public class UserController
         return new ResponseEntity<>(u, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/user", consumes = "application/json")
-    public ResponseEntity<?> addNewUser(@Valid @RequestBody User newUser) {
-        newUser.setUserid(0);
-        newUser = userService.save(newUser);
-
-        // set the location header for the newly created resource
-        HttpHeaders responseHeaders = new HttpHeaders();
-        URI newUserURI = ServletUriComponentsBuilder
-            .fromCurrentRequest()
-            .path("/{userid}")
-            .buildAndExpand(newUser.getUserid())
-            .toUri();
-        responseHeaders.setLocation(newUserURI);
-
-        return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
-    }
+//    @PostMapping(value = "/user", consumes = "application/json")
+//    public ResponseEntity<?> addNewUser(@Valid @RequestBody User newUser) {
+//        newUser.setUserid(0);
+//        newUser = userService.save(newUser);
+//
+//        // set the location header for the newly created resource
+//        HttpHeaders responseHeaders = new HttpHeaders();
+//        URI newUserURI = ServletUriComponentsBuilder
+//            .fromCurrentRequest()
+//            .path("/{userid}")
+//            .buildAndExpand(newUser.getUserid())
+//            .toUri();
+//        responseHeaders.setLocation(newUserURI);
+//
+//        return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
+//    }
 
     @PutMapping(value = "/user/{id}", consumes = "application/json")
-    public ResponseEntity<?> updateUser(@Valid @RequestBody User user, @PathVariable long id)
+    public ResponseEntity<?> updateUser(@Valid @RequestBody
+                                            UserMinimum user, @PathVariable long id)
     {
         User newUser = userService.update(user, id);
         return new ResponseEntity<>(newUser, HttpStatus.OK);
