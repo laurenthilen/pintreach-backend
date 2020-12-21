@@ -2,6 +2,10 @@ package com.laurenemick.pintreach.models;
 
 import javax.validation.constraints.Email;
 
+/**
+ * A model used to create a new user. The minimum information needed to create a user.
+ * Note the role will default to USER.
+ */
 public class UserMinimum
 {
     private String username;
@@ -12,22 +16,6 @@ public class UserMinimum
     private String primaryemail;
 
     private String imageurl;
-
-    public UserMinimum()
-    {
-    }
-
-    public UserMinimum(
-        String username,
-        String password,
-        String primaryemail,
-        String imageurl)
-    {
-        this.username = username;
-        this.password = password;
-        this.primaryemail = primaryemail;
-        this.imageurl = imageurl;
-    }
 
     public String getUsername()
     {
@@ -53,6 +41,7 @@ public class UserMinimum
     {
         return primaryemail;
     }
+
     public void setPrimaryemail(String primaryemail)
     {
         this.primaryemail = primaryemail;

@@ -5,11 +5,8 @@ import com.laurenemick.pintreach.models.ValidationError;
 
 import java.util.List;
 
-/**
- * Class contains helper functions - functions that are needed throughout the application. The class can be autowired
- * into any class.
- */
-public interface HelperFunctions {
+public interface HelperFunctions
+{
     /**
      * Searches to see if the exception has any constraint violations to report
      *
@@ -18,18 +15,4 @@ public interface HelperFunctions {
      */
     List<ValidationError> getConstraintViolation(Throwable cause);
 
-    /**
-     * Checks to see if the authenticated user has access to modify the requested user's information
-     *
-     * @param username The user name of the user whose data is requested to be changed. This should either match the authenticated user
-     *                 or the authenticate must have the role ADMIN
-     * @return true if the user can make the modifications, otherwise an exception is thrown
-     */
-    boolean isAuthorizedToMakeChange(String username);
-
-    /**
-     * Return the currently logged in User
-     * @return The currently logged in User
-     */
-    User getCurrentUser();
 }

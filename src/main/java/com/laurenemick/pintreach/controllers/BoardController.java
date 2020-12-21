@@ -1,12 +1,16 @@
 package com.laurenemick.pintreach.controllers;
 
+import com.laurenemick.pintreach.models.Article;
 import com.laurenemick.pintreach.models.Board;
+import com.laurenemick.pintreach.models.User;
 import com.laurenemick.pintreach.services.HelperFunctions;
 import com.laurenemick.pintreach.services.BoardService;
+import com.laurenemick.pintreach.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -23,12 +27,15 @@ public class BoardController
     private BoardService boardService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private HelperFunctions helperFunctions;
 
-    @GetMapping(value = "/user/{userId}", produces = {"application/json"})
-    public ResponseEntity<?> listAllBoards(@PathVariable Long userId)
+    @GetMapping(value = "/boards", produces = {"application/json"})
+    public ResponseEntity<?> listAllBoards()
     {
-        List<Board> myBoards = boardService.findAllByUserId(userId);
+        List<Board> myBoards = boardService.findAll();
         return new ResponseEntity<>(myBoards, HttpStatus.OK);
     }
 
@@ -45,22 +52,11 @@ public class BoardController
 
     @PostMapping(value = "/board", consumes = {"application/json"})
     public ResponseEntity<?> addNewBoard(@Valid
-                                         @RequestBody Board newBoard) throws URISyntaxException
+                                         @RequestBody Board newBoard, Authentication authentication)
     {
-        // always post as current user
-        newBoard.setUser(helperFunctions.getCurrentUser());
-
-        newBoard = boardService.save(newBoard);
-
-        HttpHeaders responseHeaders = new HttpHeaders();
-        URI newBoardURI = ServletUriComponentsBuilder
-            .fromCurrentRequest()
-            .path("/{boardId}")
-            .buildAndExpand(newBoard.getBoardid())
-            .toUri();
-        responseHeaders.setLocation(newBoardURI);
-
-        return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
+        User user = userService.findByUsername(authentication.getName());
+        boardService.addNewBoard(newBoard, user);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/board/{boardId}")

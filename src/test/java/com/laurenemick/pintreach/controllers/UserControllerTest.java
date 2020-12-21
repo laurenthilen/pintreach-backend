@@ -2,9 +2,7 @@ package com.laurenemick.pintreach.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.laurenemick.pintreach.models.*;
-import com.laurenemick.pintreach.services.BoardService;
 import com.laurenemick.pintreach.services.UserService;
-import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -37,7 +35,7 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // bc of security
 @AutoConfigureMockMvc // security
-@WithMockUser(username = "admin", roles = {"ADMIN", "USER", "DATA"})
+@WithMockUser(roles = {"ADMIN"})
 public class UserControllerTest
 {
     @Autowired
@@ -90,7 +88,7 @@ public class UserControllerTest
             "password",
             "lauren@emick.com",
             "http");
-        u2.setUserid(18);
+        u2.setUserid(2);
 
         u2.getRoles()
             .add(new UserRoles(u2, r2));
@@ -168,9 +166,10 @@ public class UserControllerTest
     @Test
     public void updateUser() throws Exception
     {
-        String apiUrl = "/users/user/18";
+        ObjectMapper mapper = new ObjectMapper();
+        String apiUrl = "/users/user/2";
 
-        User updatedUser = userList.get(18);
+        User updatedUser = userList.get(2);
         updatedUser.setImageurl("updatedimageurl");
 
         UserMinimum newUser = new UserMinimum();
@@ -180,9 +179,8 @@ public class UserControllerTest
         newUser.setPrimaryemail(updatedUser.getPrimaryemail());
         newUser.setImageurl(updatedUser.getImageurl());
 
-        Mockito.when(userService.update(newUser, 18)).thenReturn(updatedUser);
+        Mockito.when(userService.update(newUser, 2)).thenReturn(updatedUser);
 
-        ObjectMapper mapper = new ObjectMapper();
         String userString = mapper.writeValueAsString(newUser);
 
         RequestBuilder rb = MockMvcRequestBuilders.put(apiUrl)

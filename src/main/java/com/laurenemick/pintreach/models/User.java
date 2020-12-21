@@ -30,9 +30,9 @@ public class User extends Auditable
 
     @Column(nullable = false, unique = true)
     @Email
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String primaryemail;
 
+    @Column(nullable = false)
     private String imageurl;
 
     @Column(nullable = false)

@@ -1,10 +1,8 @@
 package com.laurenemick.pintreach.services;
 
 import com.laurenemick.pintreach.PintreachApplication;
-import com.laurenemick.pintreach.models.Role;
 import com.laurenemick.pintreach.models.User;
 import com.laurenemick.pintreach.models.UserMinimum;
-import com.laurenemick.pintreach.models.UserRoles;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;

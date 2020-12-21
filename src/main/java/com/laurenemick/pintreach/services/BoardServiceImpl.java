@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -28,6 +29,20 @@ public class BoardServiceImpl
     private HelperFunctions helperFunctions;
 
     @Override
+    public List<Board> findAll()
+    {
+        List<Board> list = new ArrayList<>();
+        /*
+         * findAll returns an iterator set.
+         * iterate over the iterator set and add each element to an array list.
+         */
+        boardrepos.findAll()
+            .iterator()
+            .forEachRemaining(list::add);
+        return list;
+    }
+
+    @Override
     public List<Board> findAllByUserId(long userid)
     {
         return boardrepos.findAllByUser_Userid(userid);
@@ -37,6 +52,20 @@ public class BoardServiceImpl
     {
         return boardrepos.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Board id " + id + " not found!"));
+    }
+
+    @Override
+    public void addNewBoard(Board newBoard, User user) {
+        long userId = newBoard.getBoardid();
+
+        Board addedBoard = new Board();
+
+        addedBoard.setThumbnail(addedBoard.getThumbnail());
+        addedBoard.setDescription(addedBoard.getDescription());
+        addedBoard.setName(addedBoard.getName());
+        addedBoard.setBoardid(0);
+        addedBoard.setUser(user);
+        newBoard = boardrepos.save(addedBoard);
     }
 
     @Transactional
@@ -68,12 +97,12 @@ public class BoardServiceImpl
     @Override
     public Board update(long boardId, Board board) {
         // Get current board object from DB
-        Board currentBoard = findBoardById(boardId);
+        Board currentBoard = boardrepos.findById(boardId).orElseThrow(()->new ResourceNotFoundException("Board " + boardId + " not found"));;
 
-        // Check if current user is authorized to make change
-        if (
-            helperFunctions.isAuthorizedToMakeChange(board.getUser().getUsername())
-        ) {
+//        // Check if current user is authorized to make change
+//        if (
+//            helperFunctions.isAuthorizedToMakeChange(board.getUser().getUsername())
+//        ) {
             // If the incoming object has name, update
             if (board.getName() != null) {
                 currentBoard.setName(board.getName());
@@ -92,13 +121,13 @@ public class BoardServiceImpl
             // Save updated board to DB
             return boardrepos.save(currentBoard);
 
-        } else {
-            // note we should never get to this line but is needed for the compiler
-            // to recognize that this exception can be thrown
-            throw new ResourceNotFoundException(
-                "This user is not authorized to make change"
-            );
-        }
+//        } else {
+//            // note we should never get to this line but is needed for the compiler
+//            // to recognize that this exception can be thrown
+//            throw new ResourceNotFoundException(
+//                "This user is not authorized to make change"
+//            );
+//        }
     }
 
     @Transactional
