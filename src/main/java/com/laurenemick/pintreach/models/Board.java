@@ -16,7 +16,7 @@ public class Board extends Auditable
     private long boardid;
 
     @Column(nullable = false)
-    private String name;
+    private String title;
 
     private String description;
 
@@ -40,12 +40,12 @@ public class Board extends Auditable
     }
 
     public Board(
-        String name,
+        String title,
         String description,
         String thumbnail,
         User user)
     {
-        this.name = name;
+        this.title = title;
         this.description = description;
         this.thumbnail = thumbnail;
         this.user = user;
@@ -61,14 +61,14 @@ public class Board extends Auditable
         this.boardid = boardid;
     }
 
-    public String getName()
+    public String getTitle()
     {
-        return name;
+        return title;
     }
 
-    public void setName(String name)
+    public void setTitle(String title)
     {
-        this.name = name;
+        this.title = title;
     }
 
     public String getDescription()

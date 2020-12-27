@@ -39,6 +39,13 @@ public class BoardController
         return new ResponseEntity<>(myBoards, HttpStatus.OK);
     }
 
+//    @GetMapping(value = "/user/{userId}", produces = {"application/json"})
+//    public ResponseEntity<?> listAllBoards(@PathVariable Long userId)
+//    {
+//        List<Board> myBoards = boardService.findAllByUserId(userId);
+//        return new ResponseEntity<>(myBoards, HttpStatus.OK);
+//    }
+
     @GetMapping(value = "/board/{boardId}",
         produces = {"application/json"})
     public ResponseEntity<?> getBoardById(
@@ -51,8 +58,7 @@ public class BoardController
     }
 
     @PostMapping(value = "/board", consumes = {"application/json"})
-    public ResponseEntity<?> addNewBoard(@Valid
-                                         @RequestBody Board newBoard, Authentication authentication)
+    public ResponseEntity<?> addNewBoard(@RequestBody Board newBoard, Authentication authentication)
     {
         User user = userService.findByUsername(authentication.getName());
         boardService.addNewBoard(newBoard, user);

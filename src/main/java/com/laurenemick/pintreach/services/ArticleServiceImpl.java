@@ -5,9 +5,17 @@ import com.laurenemick.pintreach.models.Article;
 import com.laurenemick.pintreach.repositories.ArticleRepository;
 import com.laurenemick.pintreach.repositories.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +28,9 @@ public class ArticleServiceImpl
 
     @Autowired
     private BoardRepository boardrepos;
+
+    @Autowired
+    private ArticleService articleService;
 
     @Autowired
     private UserAuditing userAuditing;
@@ -84,6 +95,28 @@ public class ArticleServiceImpl
     public void deleteAll() {
         articlerepos.deleteAll();
     }
+
+
+//    @PostMapping(value = "/article")
+//    public ResponseEntity<?> addArticle(@Valid
+//                                        @RequestBody
+//                                                Article newarticle)
+//    {
+//        newarticle.setArticleid(0);
+//        newarticle = articleService.save(newarticle);
+//
+//        // set the location header for the newly created resource
+//        HttpHeaders responseHeaders = new HttpHeaders();
+//        URI newArticleURI = ServletUriComponentsBuilder.fromCurrentRequest()
+//            .path("/{userid}")
+//            .buildAndExpand(newarticle.getArticleid())
+//            .toUri();
+//        responseHeaders.setLocation(newArticleURI);
+//
+//        return new ResponseEntity<>(null,
+//            responseHeaders,
+//            HttpStatus.CREATED);
+//    }
 
 //    // later addition - user can add articles
 //    // title, author, content, description, publishedAt, source, url, urlToImage

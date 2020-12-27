@@ -60,9 +60,9 @@ public class BoardServiceImpl
 
         Board addedBoard = new Board();
 
-        addedBoard.setThumbnail(addedBoard.getThumbnail());
-        addedBoard.setDescription(addedBoard.getDescription());
-        addedBoard.setName(addedBoard.getName());
+        addedBoard.setThumbnail(newBoard.getThumbnail());
+        addedBoard.setDescription(newBoard.getDescription());
+        addedBoard.setTitle(newBoard.getTitle());
         addedBoard.setBoardid(0);
         addedBoard.setUser(user);
         newBoard = boardrepos.save(addedBoard);
@@ -82,7 +82,7 @@ public class BoardServiceImpl
         Board newBoard = new Board();
 
         // Set local fields
-        newBoard.setName(board.getName());
+        newBoard.setTitle(board.getTitle());
         newBoard.setDescription(board.getDescription());
         newBoard.setThumbnail(board.getThumbnail());
 
@@ -104,8 +104,8 @@ public class BoardServiceImpl
 //            helperFunctions.isAuthorizedToMakeChange(board.getUser().getUsername())
 //        ) {
             // If the incoming object has name, update
-            if (board.getName() != null) {
-                currentBoard.setName(board.getName());
+            if (board.getTitle() != null) {
+                currentBoard.setTitle(board.getTitle());
             }
 
             // If the incoming object has description, update

@@ -176,7 +176,7 @@ public class BoardControllerTest
 
         newBoard.setBoardid(100);
         newBoard.setUser(userList.get(0));
-        newBoard.setName("New Board");
+        newBoard.setTitle("New Board");
         newBoard.setDescription("New Board description.");
         newBoard.setThumbnail("http");
         newBoard.setBoardid(0);
@@ -206,7 +206,7 @@ public class BoardControllerTest
         Board newBoard = new Board();
         newBoard.setBoardid(100);
         newBoard.setUser(userList.get(0));
-        newBoard.setName("Nuclear Energy");
+        newBoard.setTitle("Nuclear Energy");
         newBoard.setDescription("All things nuclear");
         newBoard.setThumbnail("http");
 
